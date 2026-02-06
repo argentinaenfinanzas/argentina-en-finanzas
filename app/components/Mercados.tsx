@@ -16,11 +16,10 @@ export default function Mercados() {
 
                 const formatCripto = (id: string) => {
                     const c = dataCrypto.find((coin: any) => coin.id === id);
-                    if (!c) return { label: id.toUpperCase(), val: "0", change: 0 };
                     return {
-                        label: c.symbol.toUpperCase(),
-                        val: `u$s ${c.current_price.toLocaleString()}`,
-                        change: c.price_change_percentage_24h
+                        label: c ? c.symbol.toUpperCase() : id.toUpperCase(),
+                        val: c ? `u$s ${c.current_price.toLocaleString()}` : "0",
+                        change: c ? c.price_change_percentage_24h : 0
                     };
                 };
 
@@ -31,33 +30,32 @@ export default function Mercados() {
                     formatCripto('solana'),
                     { label: "Real Brasil", val: `$${Math.round(0.18 * blue)}`, change: -0.15 },
                     { label: "Sol Peruano", val: `$${Math.round(0.27 * blue)}`, change: 0 },
-                    { label: "Guaraní PY", val: `$${(0.00013 * blue).toFixed(2)}`, change: 0.05 }
+                    { label: "Guaraní PY", val: `$${(0.00013 * blue).toFixed(2)}`, change: 0.10 }
                 ]);
             } catch (error) {
-                console.error("Error cargando ticker", error);
+                console.error("Error", error);
             }
         };
         fetchPrecios();
-        const interval = setInterval(fetchPrecios, 60000);
-        return () => clearInterval(interval);
     }, []);
 
-    if (precios.length === 0) return <div className="bg-black h-10"></div>;
+    if (precios.length === 0) return null;
 
     return (
-        <div className="bg-black border-y border-gray-800 w-full overflow-hidden relative py-2">
+        /* La "Pared": bg-black y h-12 aseguran que el fondo sea negro y sólido */
+        <div className="bg-black border-y border-gray-800 w-full overflow-hidden relative h-12 flex items-center z-50">
             <div className="flex whitespace-nowrap animate-ticker">
-                {[...precios, ...precios, ...precios].map((item, i) => {
+                {[...precios, ...precios, ...precios, ...precios].map((item, i) => {
                     const esPositivo = item.change > 0;
                     const esNegativo = item.change < 0;
                     const colorClass = esPositivo ? "text-green-500" : esNegativo ? "text-red-500" : "text-gray-400";
                     const flecha = esPositivo ? "▲" : esNegativo ? "▼" : "◀▶";
 
                     return (
-                        <div key={i} className="flex items-center px-16 border-r border-gray-900 h-full">
+                        <div key={i} className="flex items-center px-12 border-r border-gray-900 h-full">
                             <span className="text-gray-500 text-[10px] font-mono uppercase mr-3 tracking-widest">{item.label}</span>
                             <span className="text-white text-sm font-bold font-mono mr-3">{item.val}</span>
-                            <span className={`${colorClass} text-[11px] font-black flex items-center gap-1`}>
+                            <span className={`${colorClass} text-[11px] font-black`}>
                                 {flecha} {Math.abs(item.change).toFixed(2)}%
                             </span>
                         </div>
@@ -67,15 +65,12 @@ export default function Mercados() {
 
             <style jsx>{`
                 @keyframes ticker {
-                    0% { transform: translateX(-33.33%); }
+                    0% { transform: translateX(-25%); }
                     100% { transform: translateX(0); }
                 }
                 .animate-ticker {
                     display: inline-flex;
-                    animation: ticker 60s linear infinite;
-                }
-                .animate-ticker:hover {
-                    animation-play-state: paused;
+                    animation: ticker 40s linear infinite;
                 }
             `}</style>
         </div>
