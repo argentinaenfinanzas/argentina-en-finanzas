@@ -32,9 +32,7 @@ export default function Mercados() {
                     { label: "Sol Peruano", val: `$${Math.round(0.27 * blue)}`, change: 0 },
                     { label: "Guaraní PY", val: `$${(0.00013 * blue).toFixed(2)}`, change: 0.10 }
                 ]);
-            } catch (error) {
-                console.error("Error", error);
-            }
+            } catch (error) { console.error(error); }
         };
         fetchPrecios();
     }, []);
@@ -42,36 +40,27 @@ export default function Mercados() {
     if (precios.length === 0) return null;
 
     return (
-        /* La "Pared": bg-black y h-12 aseguran que el fondo sea negro y sólido */
-        <div className="bg-black border-y border-gray-800 w-full overflow-hidden relative h-12 flex items-center z-50">
-            <div className="flex whitespace-nowrap animate-ticker">
+        <div className="w-full bg-black border-y border-gray-800 relative z-[9999] h-[50px] flex items-center overflow-hidden">
+            <div className="flex whitespace-nowrap animate-ticker bg-black w-full h-full items-center">
                 {[...precios, ...precios, ...precios, ...precios].map((item, i) => {
-                    const esPositivo = item.change > 0;
-                    const esNegativo = item.change < 0;
-                    const colorClass = esPositivo ? "text-green-500" : esNegativo ? "text-red-500" : "text-gray-400";
-                    const flecha = esPositivo ? "▲" : esNegativo ? "▼" : "◀▶";
-
+                    const colorClass = item.change > 0 ? "text-green-500" : item.change < 0 ? "text-red-500" : "text-gray-400";
                     return (
-                        <div key={i} className="flex items-center px-12 border-r border-gray-900 h-full">
-                            <span className="text-gray-500 text-[10px] font-mono uppercase mr-3 tracking-widest">{item.label}</span>
+                        <div key={i} className="flex items-center px-14 border-r border-gray-900 bg-black">
+                            <span className="text-gray-500 text-[10px] font-mono uppercase mr-3">{item.label}</span>
                             <span className="text-white text-sm font-bold font-mono mr-3">{item.val}</span>
                             <span className={`${colorClass} text-[11px] font-black`}>
-                                {flecha} {Math.abs(item.change).toFixed(2)}%
+                                {item.change > 0 ? "▲" : item.change < 0 ? "▼" : "◀▶"} {Math.abs(item.change).toFixed(2)}%
                             </span>
                         </div>
                     );
                 })}
             </div>
-
             <style jsx>{`
                 @keyframes ticker {
                     0% { transform: translateX(-25%); }
                     100% { transform: translateX(0); }
                 }
-                .animate-ticker {
-                    display: inline-flex;
-                    animation: ticker 40s linear infinite;
-                }
+                .animate-ticker { animation: ticker 40s linear infinite; }
             `}</style>
         </div>
     );
