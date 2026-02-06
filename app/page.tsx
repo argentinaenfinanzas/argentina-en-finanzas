@@ -1,72 +1,75 @@
-import Mercados from './components/Mercados';
+import Mercados from "./components/Mercados";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white flex flex-col">
-      {/* HEADER PRINCIPAL */}
-      <header className="bg-black text-white pt-8 pb-0 px-6">
-        <div className="max-w-7xl mx-auto flex items-center gap-4">
-          {/* Logo AF Cuadrado como el original */}
-          <div className="bg-white text-black px-3 py-1 font-black text-3xl tracking-tighter border-2 border-white">
-            AF
+    <main className="site-shell">
+      <header className="site-header">
+        <div className="brand">
+          <div className="brand-mark">AF</div>
+          <div className="brand-text">
+            <span className="brand-title">Argentina en Finanzas</span>
+            <span className="brand-tagline">Noticias financieras</span>
           </div>
-          <h1 className="text-4xl font-black uppercase tracking-tighter">
-            Argentina en Finanzas
-          </h1>
         </div>
 
-        {/* NAVEGACIÓN DE CATEGORÍAS */}
-        <nav className="max-w-7xl mx-auto mt-8 flex gap-8 text-[12px] font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-4">
-          <span className="text-white border-b-2 border-blue-600 pb-4 cursor-pointer">Economía</span>
-          <span className="hover:text-white cursor-pointer transition-colors">Política</span>
-          <span className="hover:text-white cursor-pointer transition-colors">Finanzas</span>
-          <span className="hover:text-white cursor-pointer transition-colors">Dólar Blue</span>
-          <span className="hover:text-white cursor-pointer transition-colors">Cripto</span>
+        <nav className="site-nav">
+          <a href="#">Economía</a>
+          <a href="#">Política</a>
+          <a href="#">Finanzas</a>
+          <a href="#">Desregulación</a>
+          <a href="#">Dólar Blue</a>
+          <a href="#">Criptomonedas</a>
+          <a href="#">Región</a>
         </nav>
       </header>
 
-      {/* LA PARED NEGRA (CONTENEDOR DEL TICKER) */}
-      {/* Esto separa visualmente el header de las noticias y evita que se mezclen */}
-      <div className="bg-black w-full relative z-50 shadow-2xl">
-        <Mercados />
-      </div>
+      <section className="content-grid">
+        <aside className="news-list">
+          <h2 className="section-title">Últimas noticias</h2>
+          <article className="news-item">
+            <p className="news-kicker">Economía</p>
+            <h3>El dólar blue opera estable tras la última licitación</h3>
+            <p className="news-meta">Hace 15 minutos</p>
+          </article>
+          <article className="news-item">
+            <p className="news-kicker">Política</p>
+            <h3>El Gobierno analiza nuevas medidas fiscales para el segundo trimestre</h3>
+            <p className="news-meta">Hace 35 minutos</p>
+          </article>
+          <article className="news-item">
+            <p className="news-kicker">Finanzas</p>
+            <h3>Las provincias buscan refinanciar deuda con foco en el mercado local</h3>
+            <p className="news-meta">Hace 1 hora</p>
+          </article>
+          <article className="news-item">
+            <p className="news-kicker">Criptomonedas</p>
+            <h3>Bitcoin se sostiene arriba de los USD 40.000 con bajo volumen</h3>
+            <p className="news-meta">Hace 2 horas</p>
+          </article>
+        </aside>
 
-      {/* CUERPO DE NOTICIAS CON MARGEN */}
-      {/* El mt-12 es la clave para que las noticias no se metan debajo del ticker */}
-      <div className="max-w-7xl mx-auto mt-12 p-6 w-full text-black">
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          
-          {/* COLUMNA PRINCIPAL */}
-          <div className="md:col-span-2 border-r border-gray-100 pr-8">
-            <span className="text-blue-600 font-bold text-xs uppercase tracking-widest">Economía • Hoy</span>
-            <h2 className="text-4xl font-black mt-2 leading-tight">
-              El Gobierno acelera la desregulación del sistema financiero
-            </h2>
-            <p className="text-gray-600 mt-4 text-lg leading-relaxed">
-              El Ejecutivo prepara nuevas medidas para flexibilizar el mercado financiero y atraer inversiones.
-            </p>
-            {/* Espacio para imagen de noticia */}
-            <div className="mt-8 h-96 bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-400 italic">
-               Imagen de la noticia principal
-            </div>
+        <article className="main-story">
+          <p className="news-kicker">Economía · Hoy</p>
+          <h1>El Gobierno acelera la desregulación del sistema financiero</h1>
+          <p className="lead">
+            El Ejecutivo prepara nuevas medidas para flexibilizar el mercado y atraer inversiones en el corto
+            plazo.
+          </p>
+          <div className="main-image">Imagen principal</div>
+          <p className="body-copy">
+            Analistas del sector destacaron que el paquete incluiría ajustes en el marco regulatorio y una agenda
+            de simplificación para entidades financieras y fintech.
+          </p>
+        </article>
+
+        <aside className="markets-panel">
+          <div className="panel-header">
+            <h2>Mercados en vivo</h2>
+            <span>Actualizado</span>
           </div>
-
-          {/* COLUMNA LATERAL */}
-          <div className="flex flex-col gap-10">
-            <div className="border-b border-gray-100 pb-6">
-              <span className="text-gray-900 font-bold text-xs uppercase tracking-widest">Mercados en Vivo</span>
-              <h3 className="text-xl font-bold mt-4 leading-snug">El dólar blue opera estable tras la última licitación</h3>
-              <p className="text-sm text-gray-400 mt-2 font-mono uppercase">Dólar Blue</p>
-            </div>
-            
-            <div>
-              <h3 className="text-xl font-bold leading-snug">Criptomonedas: Bitcoin se mantiene por encima de los USD 40.000</h3>
-              <p className="text-sm text-gray-400 mt-2 font-mono uppercase">Criptomonedas</p>
-            </div>
-          </div>
-
-        </section>
-      </div>
+          <Mercados />
+        </aside>
+      </section>
     </main>
   );
 }

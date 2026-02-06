@@ -18,97 +18,60 @@ const fallbackPrecios: Precio[] = [
 ];
 
 export default function Mercados() {
-  const [precios, setPrecios] = useState<Precio[]>([]);
+  const [precios, setPrecios] = useState<Precio[]>(fallbackPrecios);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPrecios = async () => {
       try {
-        const resDolar = await fetch("https://criptoya.com/api/dolar");
-        if (!resDolar.ok) {
-          throw new Error("Respuesta inválida al consultar el dólar");
+        const res = await fetch("/api/mercados", { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error("Respuesta inválida del endpoint interno");
         }
-        const dataDolar = await resDolar.json();
-        const blue = Number(dataDolar?.blue?.ask ?? 0);
-
-        const resCrypto = await fetch(
-          "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,solana&price_change_percentage=24h"
-        );
-        if (!resCrypto.ok) {
-          throw new Error("Respuesta inválida al consultar criptomonedas");
+        const data = (await res.json()) as { precios?: Precio[] };
+        if (data?.precios?.length) {
+          setPrecios(data.precios);
         }
-        const dataCrypto: Array<{
-          id: string;
-          symbol: string;
-          current_price: number;
-          price_change_percentage_24h: number;
-        }> = await resCrypto.json();
-
-        const format = (id: string): Precio => {
-          const c = dataCrypto.find((coin) => coin.id === id);
-          const currentPrice = c?.current_price;
-          const change = c?.price_change_percentage_24h;
-          return {
-            label: c ? c.symbol.toUpperCase() : id.toUpperCase(),
-            val:
-              typeof currentPrice === "number"
-                ? `US$ ${currentPrice.toLocaleString()}`
-                : "N/D",
-            change: typeof change === "number" ? change : 0,
-          };
-        };
-
-        if (!blue) {
-          throw new Error("Datos incompletos para el dólar blue");
-        }
-
-        setPrecios([
-          { label: "Dólar Blue", val: `$${blue}`, change: 0.25 },
-          format("bitcoin"),
-          format("ethereum"),
-          format("solana"),
-          { label: "Real Brasil", val: `$${Math.round(0.18 * blue)}`, change: -0.15 },
-          { label: "Sol Peruano", val: `$${Math.round(0.27 * blue)}`, change: 0 },
-        ]);
       } catch (error) {
         console.error(error);
         setPrecios(fallbackPrecios);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchPrecios();
   }, []);
 
-  if (precios.length === 0) return null;
-
   return (
-    <div className="w-full bg-[#000000] border-y border-gray-800 h-[45px] flex items-center overflow-hidden z-[999] relative shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-      <div className="flex whitespace-nowrap animate-ticker">
+    <div className="markets-ticker" aria-live="polite">
+      <div className="markets-track">
         {[...precios, ...precios, ...precios].map((item, i) => {
           const color =
             item.change > 0
-              ? "text-green-500"
+              ? "market-change up"
               : item.change < 0
-                ? "text-red-500"
-                : "text-gray-400";
+                ? "market-change down"
+                : "market-change flat";
           return (
-            <div
-              key={`${item.label}-${i}`}
-              className="flex items-center px-16 border-r border-gray-900 bg-[#000000]"
-            >
-              <span className="text-gray-500 text-[10px] font-mono uppercase mr-3">
-                {item.label}
-              </span>
-              <span className="text-white text-sm font-bold font-mono mr-3">
-                {item.val}
-              </span>
-              <span className={`${color} text-[11px] font-black`}>
-                {item.change > 0 ? "▲" : item.change < 0 ? "▼" : "◀▶"}{" "}
-                {Math.abs(item.change).toFixed(2)}%
+            <div key={`${item.label}-${i}`} className="market-item">
+              <span className="market-label">{item.label}</span>
+              <span className="market-value">{item.val}</span>
+              <span className={color}>
+                {item.change > 0 ? "▲" : item.change < 0 ? "▼" : "•"} {Math.abs(item.change).toFixed(2)}%
               </span>
             </div>
           );
         })}
+        {loading && (
+          <div className="market-item">
+            <span className="market-label">Mercado</span>
+            <span className="market-value">Cargando...</span>
+            <span className="market-change flat">• 0.00%</span>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+
