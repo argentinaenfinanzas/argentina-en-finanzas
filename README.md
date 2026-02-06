@@ -19,8 +19,16 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Ayuda para reemplazar archivos (paso a paso)
 
 ## Learn More
+Si no programás, podés seguir estos pasos para aplicar cambios:
+
+1. Abrí el archivo que querés reemplazar (por ejemplo, `app/components/Mercados.tsx`) en tu editor.
+2. Seleccioná todo el contenido y reemplazalo por el código completo que te pasé.
+3. Guardá el archivo.
+4. Volvé a la terminal y corré `npm run dev`.
+5. Abrí el navegador en [http://localhost:3000](http://localhost:3000) para confirmar que se vea bien.
 
 To learn more about Next.js, take a look at the following resources:
 
