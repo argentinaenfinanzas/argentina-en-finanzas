@@ -16,65 +16,75 @@ export default async function Home() {
   const noticias = await getNoticias();
 
   return (
-    <main className="min-h-screen bg-white flex flex-col">
-      {/* HEADER ESTILO BLOOMBERG */}
-      <header className="bg-black text-white pt-8 pb-0 px-6">
-        <div className="max-w-7xl mx-auto flex items-center gap-4">
-          {/* Logo AF Cuadrado */}
-          <div className="bg-white text-black px-3 py-1 font-black text-3xl tracking-tighter border-2 border-white">
+    <main className="min-h-screen bg-white flex flex-col font-sans">
+      {/* HEADER NEGRO CON LOGO AF */}
+      <header className="bg-black text-white pt-10 pb-0 px-6 border-b border-gray-900">
+        <div className="max-w-7xl mx-auto flex items-center gap-5">
+          {/* LOGO AF CUADRADO TIPO BLOOMBERG */}
+          <div className="bg-white text-black px-4 py-2 font-[1000] text-4xl tracking-tighter border-2 border-white leading-none">
             AF
           </div>
           <div className="flex flex-col">
-            <h1 className="text-4xl font-black uppercase tracking-tighter leading-none">
+            <h1 className="text-4xl font-[900] uppercase tracking-tighter leading-none">
               Argentina en Finanzas
             </h1>
-            <span className="text-[10px] text-gray-500 font-bold tracking-[0.2em] mt-1">NOTICIAS FINANCIERAS</span>
+            <span className="text-[11px] text-gray-500 font-bold tracking-[0.3em] mt-1 uppercase">Noticias Financieras</span>
           </div>
         </div>
 
-        {/* MENÚ DE CATEGORÍAS */}
-        <nav className="max-w-7xl mx-auto mt-8 flex gap-8 text-[11px] font-bold text-gray-500 uppercase tracking-widest border-b border-gray-800 pb-4">
-          <span className="text-white border-b-2 border-blue-600 pb-4">Economía</span>
+        {/* NAVEGACIÓN */}
+        <nav className="max-w-7xl mx-auto mt-10 flex gap-10 text-[12px] font-bold text-gray-500 uppercase tracking-[0.15em] border-b border-gray-800 pb-4">
+          <span className="text-white border-b-4 border-blue-600 pb-4 cursor-pointer">Economía</span>
+          <span className="hover:text-white cursor-pointer transition-colors">Política</span>
           <span className="hover:text-white cursor-pointer transition-colors">Finanzas</span>
           <span className="hover:text-white cursor-pointer transition-colors">Dólar Blue</span>
           <span className="hover:text-white cursor-pointer transition-colors">Criptomonedas</span>
         </nav>
       </header>
 
-      {/* PARED NEGRA (TICKER CON COLORES) */}
-      <div className="bg-black w-full relative z-50 border-b border-gray-900 shadow-2xl">
+      {/* LA PARED NEGRA (TICKER) */}
+      <div className="bg-black w-full relative z-50 shadow-2xl overflow-hidden border-b border-gray-900">
         <Mercados />
       </div>
 
-      {/* CONTENIDO DE NOTICIAS */}
+      {/* CUERPO DE NOTICIAS */}
       <div className="max-w-7xl mx-auto mt-12 p-6 w-full text-black">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16">
           
-          {/* COLUMNA PRINCIPAL (WORDPRESS) */}
+          {/* COLUMNA DE NOTICIAS (WORDPRESS) */}
           <div className="md:col-span-8">
-            <h3 className="text-blue-600 font-bold text-xs uppercase tracking-widest mb-6 border-b border-gray-100 pb-2">Destacados</h3>
-            {noticias.map((post: any) => (
-              <article key={post.id} className="mb-12 group cursor-pointer">
-                <h2 className="text-4xl font-black leading-[1.1] group-hover:text-blue-800 transition-colors" 
+            <div className="flex items-center gap-2 mb-8">
+               <span className="w-3 h-3 bg-red-600 rounded-full animate-pulse"></span>
+               <h3 className="text-black font-black text-sm uppercase tracking-tighter">Mercado Hoy</h3>
+            </div>
+
+            {noticias.length > 0 ? noticias.map((post: any) => (
+              <article key={post.id} className="mb-16 border-b border-gray-100 pb-12 last:border-0 group cursor-pointer">
+                <span className="text-blue-700 font-bold text-xs uppercase tracking-widest">Finanzas</span>
+                <h2 className="text-5xl font-[900] leading-[1.05] mt-3 group-hover:text-blue-900 transition-colors" 
                     dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                <div className="mt-4 text-gray-600 text-lg leading-relaxed line-clamp-3" 
+                <div className="mt-5 text-gray-600 text-xl leading-relaxed line-clamp-3 font-medium" 
                      dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} />
-                <div className="mt-6 flex items-center gap-4">
-                   <span className="text-[10px] bg-gray-100 px-2 py-1 font-bold uppercase tracking-tighter">
-                     {new Date(post.date).toLocaleDateString('es-AR')}
+                <div className="mt-8 flex items-center gap-3">
+                   <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                   <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                     Por Redacción AF • {new Date(post.date).toLocaleDateString('es-AR')}
                    </span>
                 </div>
               </article>
-            ))}
+            )) : (
+              <p className="text-gray-400 italic">Cargando noticias desde el panel...</p>
+            )}
           </div>
 
-          {/* BARRA LATERAL (OPCIONAL) */}
-          <div className="md:col-span-4 border-l border-gray-100 pl-8 hidden md:block">
-            <h3 className="text-black font-black text-sm uppercase tracking-tighter mb-6">Últimas Noticias</h3>
-            <div className="space-y-8">
-               <div className="border-b border-gray-50 pb-4 italic text-gray-400 text-sm">
-                 Las noticias secundarias aparecerán aquí a medida que las categorices en el panel.
-               </div>
+          {/* BARRA LATERAL ESTILO TERMINAL */}
+          <div className="md:col-span-4 border-l border-gray-100 pl-10 hidden md:block">
+            <h3 className="text-black font-black text-sm uppercase tracking-tighter mb-8 border-b-2 border-black pb-2">Últimas Noticias</h3>
+            <div className="space-y-10">
+               {/* Aquí podrías poner un segundo fetch para noticias breves */}
+               <p className="text-gray-400 text-sm italic leading-relaxed">
+                 Las noticias secundarias aparecerán aquí automáticamente según su categoría en WordPress.
+               </p>
             </div>
           </div>
 
