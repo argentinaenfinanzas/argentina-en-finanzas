@@ -18,7 +18,7 @@ export default function Mercados() {
                     const c = dataCrypto.find((coin: any) => coin.id === id);
                     return {
                         label: c ? c.symbol.toUpperCase() : id.toUpperCase(),
-                        val: c ? `u$s ${c.current_price.toLocaleString()}` : "0",
+                        val: c ? `u$s ${c.current_price.toLocaleString()}` : "N/D",
                         change: c ? c.price_change_percentage_24h : 0
                     };
                 };
@@ -29,49 +29,34 @@ export default function Mercados() {
                     formatCripto('ethereum'),
                     formatCripto('solana'),
                     { label: "Real Brasil", val: `$${Math.round(0.18 * blue)}`, change: -0.05 },
-                    { label: "Sol Peruano", val: `$${Math.round(0.27 * blue)}`, change: 0 },
-                    { label: "Guaraní PY", val: `$${(0.00013 * blue).toFixed(2)}`, change: 0.10 }
+                    { label: "Sol Peruano", val: `$${Math.round(0.27 * blue)}`, change: 0.02 }
                 ]);
-            } catch (error) {
-                console.error("Error cargando ticker", error);
-            }
+            } catch (e) { console.error(e); }
         };
         fetchPrecios();
         const interval = setInterval(fetchPrecios, 60000);
         return () => clearInterval(interval);
     }, []);
 
-    if (precios.length === 0) return <div className="bg-black h-12 w-full"></div>;
-
     return (
-        <div className="bg-black w-full overflow-hidden relative h-12 flex items-center">
-            <div className="flex whitespace-nowrap animate-ticker">
-                {[...precios, ...precios, ...precios, ...precios].map((item, i) => {
-                    const esPositivo = item.change > 0;
-                    const esNegativo = item.change < 0;
-                    const colorClass = esPositivo ? "text-green-500" : esNegativo ? "text-red-500" : "text-gray-400";
-                    const flecha = esPositivo ? "▲" : esNegativo ? "▼" : "◀▶";
-
+        <div style={{ backgroundColor: '#000000', height: '45px', overflow: 'hidden', display: 'flex', alignItems: 'center', borderTop: '1px solid #222' }}>
+            <div style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'tickerMove 30s linear infinite' }}>
+                {[...precios, ...precios, ...precios].map((item, i) => {
+                    const color = item.change > 0 ? '#00ff00' : item.change < 0 ? '#ff0000' : '#888';
+                    const flecha = item.change > 0 ? '▲' : item.change < 0 ? '▼' : '▶';
                     return (
-                        <div key={i} className="flex items-center px-14 border-r border-gray-900 bg-black">
-                            <span className="text-gray-500 text-[10px] font-mono uppercase mr-3 tracking-widest">{item.label}</span>
-                            <span className="text-white text-sm font-bold font-mono mr-3">{item.val}</span>
-                            <span className={`${colorClass} text-[11px] font-black`}>
-                                {flecha} {Math.abs(item.change).toFixed(2)}%
-                            </span>
+                        <div key={i} style={{ display: 'inline-flex', alignItems: 'center', padding: '0 40px', borderRight: '1px solid #111' }}>
+                            <span style={{ color: '#555', fontSize: '10px', fontWeight: 'bold', marginRight: '10px' }}>{item.label}</span>
+                            <span style={{ color: '#fff', fontSize: '13px', fontWeight: '900', marginRight: '10px' }}>{item.val}</span>
+                            <span style={{ color: color, fontSize: '11px', fontWeight: 'bold' }}>{flecha} {Math.abs(item.change).toFixed(2)}%</span>
                         </div>
                     );
                 })}
             </div>
-
-            <style jsx>{`
-                @keyframes ticker {
-                    0% { transform: translateX(-25%); }
-                    100% { transform: translateX(0); }
-                }
-                .animate-ticker {
-                    display: inline-flex;
-                    animation: ticker 40s linear infinite;
+            <style>{`
+                @keyframes tickerMove {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-33.33%); }
                 }
             `}</style>
         </div>
