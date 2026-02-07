@@ -61,11 +61,11 @@ export async function GET() {
     }
 
     const precios: Precio[] = [
-      { label: "Dólar Blue", val: `$${blue}`, change: 0.25 },
+      { label: "Dólar Blue", val: `$${blue}`, change: 0 },
       format("bitcoin"),
       format("ethereum"),
       format("solana"),
-      { label: "Real Brasil", val: `$${Math.round(0.18 * blue)}`, change: -0.15 },
+      { label: "Real Brasil", val: `$${Math.round(0.18 * blue)}`, change: 0 },
       { label: "Sol Peruano", val: `$${Math.round(0.27 * blue)}`, change: 0 },
     ];
 
