@@ -1,4 +1,6 @@
+export const dynamic = 'force-dynamic';
 import Mercados from './components/Mercados';
+// ... resto del código ...
 
 // Esta función es la que conecta con tu noticia de WordPress
 async function getNoticias() {
